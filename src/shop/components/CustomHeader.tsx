@@ -5,13 +5,15 @@ import { useRef, type KeyboardEvent } from "react";
 import { Link, useParams, useSearchParams } from "react-router";
 import { cn } from "cn";
 import { CustomLogo } from "@/components/custom/CustomLogo";
+import { useAuthStore } from "@/auth/store/auth.store";
 
 export const CustomHeader = () => {
 
-    const [searchParams, setSearchParams] = useSearchParams()
+    const [ searchParams, setSearchParams ] = useSearchParams()
     const inputRef = useRef<HTMLInputElement>(null)
     const searchQuery = searchParams.get('query') || ''
-    const {gender} = useParams()
+    const { gender } = useParams()
+    const { user, logout } = useAuthStore()
 
     const handleInputSearch = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key !== 'Enter') return;
@@ -74,15 +76,28 @@ export const CustomHeader = () => {
                         <Search className="h-5 w-5" />
                     </Button>
 
-                    <Link to='/auth/login'>
-                        <Button
-                            variant='default'
-                            size='sm'
-                            className='ml-2'
-                        >
-                            Login
-                        </Button>
-                    </Link>
+                    {
+                        !user ? (
+                            <Link to='/auth/login'>
+                                <Button
+                                    variant='default'
+                                    size='sm'
+                                    className='ml-2'
+                                >
+                                    Login
+                                </Button>
+                            </Link>
+                        ): (
+                            <Button
+                                onClick={logout}
+                                variant='outline'
+                                size='sm'
+                                className='ml-2'
+                            >
+                                Cerrar Sesión
+                            </Button>
+                        )
+                    }
 
                     <Link to='/admin'>
                         <Button
