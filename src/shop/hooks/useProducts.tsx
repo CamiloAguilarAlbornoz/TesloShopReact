@@ -10,6 +10,7 @@ export const useProducts = () => {
     const page = searchParams.get('page') || 1
     const sizes = searchParams.get('sizes') || ''
     const price = searchParams.get('price') || 'any'
+    const query = searchParams.get('query') || ''
     const {gender} = useParams()
 
     const offset = (Number(page) - 1) * Number(limit)
@@ -28,14 +29,15 @@ export const useProducts = () => {
     }
 
     return useQuery({
-        queryKey: ['products', {limit, offset, sizes, gender, minPrice, maxPrice}],
+        queryKey: ['products', {limit, offset, sizes, gender, minPrice, maxPrice, query}],
         queryFn: () => getProductActions({
             limit: isNaN(+limit) ? 9 : limit,
             offset: isNaN(offset) ? 0 : offset,
             sizes,
             gender,
             minPrice,
-            maxPrice
+            maxPrice,
+            query
         }),
         staleTime: 1000 * 60 * 5, // Mantiene 5 minutos los datos en cache para que no consulte tanto al api
     })
