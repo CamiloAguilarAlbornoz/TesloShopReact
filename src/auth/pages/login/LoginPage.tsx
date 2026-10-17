@@ -5,13 +5,14 @@ import { Label } from '@/components/ui/label'
 import { CustomLogo } from '@/components/custom/CustomLogo'
 import { Link, useNavigate } from 'react-router'
 import { useState, type SubmitEvent } from 'react'
-import { loginAction } from '@/auth/actions/login.action'
 import { toast } from 'sonner'
+import { useAuthStore } from '../../store/auth.store';
 
 export const LoginPage = () => {
 
     const navigate = useNavigate()
     const [isPosting, setIsPosting] = useState<boolean>()
+    const { login } = useAuthStore()
 
     const handleLogin = async (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault() // Evitar propagación por defecto
@@ -22,14 +23,13 @@ export const LoginPage = () => {
         const email = formData.get('email') as string
         const password = formData.get('password') as string
 
-        try {
-            const data = await loginAction(email, password)
-            localStorage.setItem('token', data.token)
+        const hasSuccess = await login(email, password)
+
+        if (hasSuccess) {
             navigate('/')
-        } catch (error) {
-            console.error(error)
-            toast.error(`Correo o/y contraseña no validos`)
+            return;
         }
+        toast.error(`Correo y/o contraseña no validos`)
         setIsPosting(false)
     }
 
