@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query"
-import { useParams } from "react-router"
 import { getProductByIdAction } from "../actions/get_product_by_id.action"
 
 export const useProduct = (idSlug: string) => {
