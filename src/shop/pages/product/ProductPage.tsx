@@ -15,6 +15,7 @@ export const ProductPage = () => {
     
     const [activeImage, setActiveImage] = useState(0);
     const [quantity, setQuantity] = useState(1);
+    const [imagePosition, setImagePosition] = useState(0)
 
     if (isError) return (<Navigate to='/' />)
     if (isLoading || product === undefined) return (<CustomFullScreenLoading />)
@@ -24,7 +25,7 @@ export const ProductPage = () => {
         : product.stock > 0
             ? { label: `Solo ${product.stock} disponibles`, color: 'text-amber-700', bg: 'bg-amber-50', dot: 'bg-amber-500' }
             : { label: 'Agotado', color: 'text-red-700', bg: 'bg-red-50', dot: 'bg-red-500' };
-            
+
     return (
         <div className="min-h-screen bg-[#f7f6f3]">
             {/* Main product section */}
@@ -34,7 +35,7 @@ export const ProductPage = () => {
                 <div className="animate-fade-in-up">
                     <div className="relative overflow-hidden rounded-2xl bg-stone-100">
                     <img
-                        src={product.images[0]}
+                        src={product.images[imagePosition]}
                         alt={product.title}
                         className="aspect-[4/5] w-full object-cover transition-transform duration-700 hover:scale-105"
                     />
@@ -55,7 +56,11 @@ export const ProductPage = () => {
                             : 'border-transparent opacity-60 hover:opacity-100'
                         }`}
                         >
-                        <img src={img} alt={`Vista ${i + 1}`} className="h-20 w-20 object-cover" />
+                        <img
+                        src={img}
+                        alt={`Vista ${i + 1}`}
+                        className="h-20 w-20 object-cover"
+                        onClick={() => setImagePosition(i)}/>
                         </button>
                     ))}
                     </div>
@@ -113,7 +118,6 @@ export const ProductPage = () => {
                             product.sizes.map((size) => (
                                 <button
                                 key={size}
-                                onClick={() => setSelectedSize(size)}
                                 className='relative h-14 w-16 rounded-xl border-2 text-base font-bold transition-all duration-200 active:scale-95 border-stone-200 bg-white text-stone-700 hover:border-stone-400'
                                 >
                                     {size}    
