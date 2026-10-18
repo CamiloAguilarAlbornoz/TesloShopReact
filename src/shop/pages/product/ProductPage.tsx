@@ -2,12 +2,6 @@ import { useState } from 'react';
 
 import {
     ShoppingBag,
-    Heart,
-    Share2,
-    Truck,
-    RefreshCw,
-    ShieldCheck,
-    Check,
 } from 'lucide-react';
 import { useProduct } from '@/shop/hooks/useProduct';
 import { Navigate, useParams } from 'react-router';
@@ -19,9 +13,7 @@ export const ProductPage = () => {
 
     const{data: product, isError, isLoading} = useProduct(idSlug || '')
     
-    const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const [activeImage, setActiveImage] = useState(0);
-    const [isFavorited, setIsFavorited] = useState(false);
     const [quantity, setQuantity] = useState(1);
 
     if (isError) return (<Navigate to='/' />)
@@ -129,9 +121,7 @@ export const ProductPage = () => {
                             ))
                         }
                     </div>
-                    {selectedSize === null && (
-                        <p className="mt-2.5 text-sm text-stone-400">Elige una talla para continuar</p>
-                    )}
+                    <p className="mt-2.5 text-sm text-stone-400">Elige una talla para continuar</p>
                     </div>
 
                     {/* Quantity + Add to cart */}
@@ -154,13 +144,7 @@ export const ProductPage = () => {
                     </div>
 
                     {/* Add to cart */}
-                    <button
-                        disabled={selectedSize === null}
-                        className={`flex h-14 flex-1 items-center justify-center gap-2.5 rounded-xl font-bold text-white transition-all duration-300 active:scale-[0.98] ${
-                        selectedSize === null
-                            ? 'cursor-not-allowed bg-stone-300'
-                            : 'bg-stone-900 hover:bg-stone-800 hover:shadow-lg hover:shadow-stone-900/20'
-                        }`}
+                    <button className={`flex h-14 flex-1 items-center justify-center gap-2.5 rounded-xl font-bold text-white transition-all duration-300 active:scale-[0.98] cursor-not-allowed bg-stone-300`}
                     >
                         <ShoppingBag className="h-5 w-5" strokeWidth={2} />
                         Añadir al carrito
