@@ -15,6 +15,11 @@ export const createUpdateProductAction = async (productLike: Partial<Product> & 
         images.push(...newImagesNames)
     }
 
+    const imagesToSave = images.map(image => {
+        if (image.includes('http')) return image.split('/').pop();
+        return image
+    })
+
     rest.stock = Number(rest.stock || 0)
     rest.price = Number(rest.price || 0)
 
@@ -23,7 +28,7 @@ export const createUpdateProductAction = async (productLike: Partial<Product> & 
         method: isCreating ? 'POST' : 'PATCH',
         data: {
             ...rest,
-            images: images
+            images: imagesToSave
         }
     })
 
