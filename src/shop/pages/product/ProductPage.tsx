@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
 import {
-    ShoppingBag,
+    PencilIcon,
 } from 'lucide-react';
 import { useProduct } from '@/shop/hooks/useProduct';
-import { Navigate, useParams } from 'react-router';
+import { Navigate, useParams, Link } from 'react-router';
 import { CustomFullScreenLoading } from '@/components/custom/CustomFullScreenLoading';
 
 export const ProductPage = () => {
@@ -14,7 +14,6 @@ export const ProductPage = () => {
     const{data: product, isError, isLoading} = useProduct(idSlug || '')
     
     const [activeImage, setActiveImage] = useState(0);
-    const [quantity, setQuantity] = useState(1);
     const [imagePosition, setImagePosition] = useState(0)
 
     if (isError) return (<Navigate to='/' />)
@@ -77,9 +76,15 @@ export const ProductPage = () => {
                     </div>
 
                     {/* Name */}
-                    <h1 className="text-4xl font-bold leading-tight tracking-tight text-stone-900">
-                    {product.title}
-                    </h1>
+                    <div className='flex justify-between items-center'>
+                        <h1 className="text-4xl font-bold leading-tight tracking-tight text-stone-900">
+                        {product.title}
+                        </h1>
+                        <Link to={`/admin/products/${idSlug}`}>
+                            <PencilIcon
+                                className='w-4 h-4 text-blue-500' />
+                        </Link>
+                    </div>
 
                     {/* Price */}
                     <div className="mt-6 flex items-baseline gap-3">
@@ -130,29 +135,7 @@ export const ProductPage = () => {
 
                     {/* Quantity + Add to cart */}
                     <div className="mt-8 flex items-stretch gap-3">
-                    {/* Quantity selector */}
-                    <div className="flex items-center rounded-xl border-2 border-stone-200 bg-white">
-                        <button
-                        onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                        className="flex h-14 w-12 items-center justify-center text-xl font-light text-stone-600 transition hover:text-stone-900 active:scale-90"
-                        >
-                        −
-                        </button>
-                        <span className="w-10 text-center text-base font-bold text-stone-900">{quantity}</span>
-                        <button
-                        onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
-                        className="flex h-14 w-12 items-center justify-center text-xl font-light text-stone-600 transition hover:text-stone-900 active:scale-90"
-                        >
-                        +
-                        </button>
-                    </div>
-
-                    {/* Add to cart */}
-                    <button className={`flex h-14 flex-1 items-center justify-center gap-2.5 rounded-xl font-bold text-white transition-all duration-300 active:scale-[0.98] cursor-not-allowed bg-stone-300`}
-                    >
-                        <ShoppingBag className="h-5 w-5" strokeWidth={2} />
-                        Añadir al carrito
-                    </button>
+                    
                     </div>
                 </div>
                 </div>
