@@ -14,10 +14,14 @@ interface Props {
     isPending: boolean
 
     // Methods
-    onSubmit: (productLike: Partial<Product>) => Promise<void>
+    onSubmit: (productLike: Partial<Product> & {files?: File[]}) => Promise<void>
 }
 
 const availableSizes: Size[] = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+
+interface FormInputs extends Product {
+    files?: File[]
+} 
 
 export const AdminProductForm = ({title, subTitle, product, onSubmit, isPending}: Props) => {
 
@@ -29,7 +33,7 @@ export const AdminProductForm = ({title, subTitle, product, onSubmit, isPending}
         getValues, // Permite obtener los valores del formulario
         setValue, // Permite asignar valores al formulario
         watch,
-    } = useForm({
+    } = useForm<FormInputs >({
         defaultValues: product
     })
 
@@ -37,9 +41,9 @@ export const AdminProductForm = ({title, subTitle, product, onSubmit, isPending}
     const selectedSizes = watch('sizes')
     const selectedTags = watch('tags')
     const currentStock = watch('stock')
+    const files = watch('files') || []
     const inputTag = useRef<HTMLInputElement>(null)
-    const [files, setFiles] = useState<File[]>([])
-
+    
     const addTag = () => {
         if (inputTag.current === undefined || inputTag.current === null) return;
         const newTag = inputTag.current.value || ''
@@ -86,13 +90,15 @@ export const AdminProductForm = ({title, subTitle, product, onSubmit, isPending}
         setDragActive(false);
         const files = e.dataTransfer.files;
         if (!files) return;
-        setFiles(prev => [...prev, ...Array.from(files)])
+        const currentFiles = getValues('files') || []
+        setValue('files', [...currentFiles, ...Array.from(files)])
     };
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
         if (!files) return;
-        setFiles(prev => [...prev, ...Array.from(files)])
+        const currentFiles = getValues('files') || []
+        setValue('files', [...currentFiles, ...Array.from(files)])
     };
 
     return (
